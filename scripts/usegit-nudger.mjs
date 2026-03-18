@@ -10,6 +10,7 @@
 
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
+import { execSync } from 'child_process';
 
 const EDIT_THRESHOLD = 15;
 const EDIT_THRESHOLD_NEXT = 30;
@@ -39,6 +40,10 @@ const NUDGES = {
   destructive: {
     friendly: '[use-git] Careful — you have uncommitted changes. This might erase them. Commit first with /use-git?',
     technical: '[use-git] Uncommitted changes. This command may discard them. Commit first?',
+  },
+  protected_branch: {
+    friendly: '[use-git:BRANCH PROTECTION] You are on "{branch}" with uncommitted changes. Create a feature branch before committing. Run: git checkout -b feat/your-change',
+    technical: '[use-git:BRANCH PROTECTION] On "{branch}" with uncommitted changes. Create feature branch: git checkout -b feat/your-change',
   },
 };
 
@@ -82,6 +87,20 @@ function isDestructiveCommand(command) {
   return DESTRUCTIVE_PATTERNS.some(p => p.test(command));
 }
 
+function getCurrentBranch(directory) {
+  try {
+    return execSync('git branch --show-current', { cwd: directory, encoding: 'utf-8' }).trim();
+  } catch {
+    return null;
+  }
+}
+
+const PROTECTED_BRANCHES = ['main', 'master'];
+
+function isProtectedBranch(branch) {
+  return PROTECTED_BRANCHES.includes(branch);
+}
+
 async function main() {
   try {
     const input = await readStdin();
@@ -101,6 +120,12 @@ async function main() {
     const voice = state.voice || 'friendly';
     let nudgeText = null;
     let stateChanged = false;
+
+    // Priority 0: Branch protection check
+    const currentBranch = getCurrentBranch(directory);
+    if (currentBranch && isProtectedBranch(currentBranch) && (state.edits_since_commit || 0) > 0) {
+      nudgeText = getNudge('protected_branch', voice, { branch: currentBranch });
+    }
 
     // Priority 1: Destructive command warning (always, regardless of mode)
     if (toolName === 'Bash') {
