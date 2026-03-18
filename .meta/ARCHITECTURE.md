@@ -49,7 +49,7 @@ The plugin is composed of five component types, each with a distinct role:
 The brain. Loaded into Claude's context when the commit workflow is triggered. Contains:
 
 - **Workflow steps**: the full environment-check → analysis → staging → commit → summary sequence
-- **Mode rules**: what to do in zen vs coach vs autopilot
+- **Mode rules**: what to do in zen vs coach vs justdoit
 - **Voice templates**: how to phrase output in friendly vs technical
 - **Branch protection rules**: never commit to main/master
 - **Secrets detection patterns**: filename and content patterns to block
@@ -112,7 +112,7 @@ All scripts are **pure shell/Node.js** — they never invoke the LLM. This is cr
 
 **What it does:**
 ```
-1. Check: is use-git active? Is mode coach or autopilot?
+1. Check: is use-git active? Is mode coach or justdoit?
    NO  → exit (no nudge in zen mode)
 
 2. Read state. Evaluate nudge conditions:
@@ -127,7 +127,7 @@ All scripts are **pure shell/Node.js** — they never invoke the LLM. This is cr
    - Mark nudge as delivered (prevent re-firing until next threshold)
    - Clear state.tests_just_passed if that was the trigger
 
-4. If autopilot mode AND tests_just_passed:
+4. If justdoit mode AND tests_just_passed:
    - Instead of nudge text, return skill invocation instruction
      (tells Claude to run /use-git automatically)
 ```
@@ -187,7 +187,7 @@ Claude calls Edit tool
 Edit completes normally
 ```
 
-### 4.2 Nudge Injection (coach/autopilot, ~20 tokens)
+### 4.2 Nudge Injection (coach/justdoit, ~20 tokens)
 
 ```
 User asks Claude to do something
@@ -208,7 +208,7 @@ Claude is about to call a tool
               │
               ▼
        Claude sees: "[use-git] Tests green. 4 files uncommitted. /use-git?"
-       Claude may mention this to the user (or auto-invoke in autopilot)
+       Claude may mention this to the user (or auto-invoke in justdoit)
 ```
 
 ### 4.3 Full Workflow (on /use-git invocation, moderate tokens)
