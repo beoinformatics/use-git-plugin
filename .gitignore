@@ -11,3 +11,4 @@ dist/
 *.log
 .omc/
 .use-git/
+.claude/settings.local.json
