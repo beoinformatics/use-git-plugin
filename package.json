@@ -1,0 +1,24 @@
+{
+  "name": "use-git",
+  "version": "0.1.0",
+  "description": "Automated local git best practices for Claude Code — commit well without thinking about it",
+  "type": "module",
+  "author": {
+    "name": "Eckart"
+  },
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "plugin",
+    "git",
+    "version-control",
+    "vibe-coding"
+  ],
+  "files": [
+    "agents",
+    "commands",
+    "hooks",
+    "scripts",
+    "skills"
+  ]
+}
