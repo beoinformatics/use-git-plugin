@@ -29,6 +29,8 @@ When `mode` is `autopilot`, the following changes apply throughout the workflow:
 If the user provided arguments:
 - `mode zen|coach|autopilot` → Update state file, confirm to user, done.
 - `voice friendly|technical` → Update state file, confirm to user, done.
+- `test-command "<command>"` → Set `test_command` to the given command and `test_command_set` to `true`. If the command is `none`, set `test_command` to `null`. Confirm to user, done.
+- `test-command` (no argument) → Show current test command setting, done.
 - `status` → Read state file, display current settings and tracking info, done.
 - No args → Continue to Step 1.
 
@@ -69,6 +71,8 @@ After the user answers, create the state file:
   "last_commit_at": null,
   "last_edit_at": null,
   "test_runner_detected": null,
+  "test_command": null,
+  "test_command_set": false,
   "protected_branches": ["main", "master"],
   "current_branch": null,
   "initialized": true
@@ -105,13 +109,44 @@ Then run environment detection. **IMPORTANT: Narrate each step in the chosen voi
 2. Does `.gitignore` exist? If not, generate one based on project type (narrate in chosen voice).
 3. What branch are we on? Save to state.
 4. Detect test runner (look for jest.config*, vitest.config*, pytest.ini, pyproject.toml with [tool.pytest], Cargo.toml, go.mod). Save to state.
-5. Ensure `.use-git/` is in `.gitignore`.
+5. **Ask about test command.** If a test runner was detected, confirm the inferred command with the user. If no runner was detected, ask directly. The user can also say "none" to explicitly opt out.
+
+   **Friendly voice (runner detected):**
+   > I found [runner] set up. I'll treat `[inferred command]` as your test suite — when it passes, I'll know it's a good time to save. If that's not right, tell me the command you use. Or say "no tests" if this isn't a code project.
+
+   **Friendly voice (no runner detected):**
+   > Do you run tests in this project? If so, what command? (e.g., `npm test`, `pytest`, `make test`). If not, just say "no tests" — I'll save based on your editing pace instead.
+
+   **Technical voice (runner detected):**
+   > Detected: [runner]. Register `[inferred command]` as test command? (enter to confirm / override / 'none')
+
+   **Technical voice (no runner detected):**
+   > Test command? (e.g., `npm test`, `pytest`, `make test`, or 'none')
+
+   After the user answers:
+   - Set `test_command` to the user's answer (or inferred command if confirmed)
+   - Set `test_command_set` to `true`
+   - If user said "none" / "no tests": set `test_command` to `null`, `test_command_set` to `true`
+
+6. Ensure `.use-git/` is in `.gitignore`.
 
 Then continue to Step 1 if there's uncommitted work, or tell the user they're all set.
 
 ## Step 1: Environment Check
 
 Run `git status` and `git branch --show-current`.
+
+### 1z. Test Command Not Set
+
+If `test_command_set` is `false` in state, warn the user before proceeding:
+
+**Friendly voice:**
+> By the way — I don't know what command runs your tests yet. You can tell me anytime with `/use-git test-command "your command"`, or `/use-git test-command none` if this isn't a code project. Until then, I can't nudge you when tests pass.
+
+**Technical voice:**
+> Warning: test_command not set. Run `/use-git test-command "<cmd>"` or `/use-git test-command none`. Test-pass nudges disabled.
+
+Then continue with the workflow normally.
 
 ### 1a. Branch Protection
 

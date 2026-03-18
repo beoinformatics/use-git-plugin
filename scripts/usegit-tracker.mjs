@@ -12,17 +12,6 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join, resolve } from 'path';
 
 const TRACKED_TOOLS = new Set(['Edit', 'Write']);
-const TEST_COMMANDS = [
-  /\bnpm\s+test\b/,
-  /\bnpx\s+(jest|vitest|mocha)\b/,
-  /\byarn\s+test\b/,
-  /\bpnpm\s+test\b/,
-  /\bpytest\b/,
-  /\bpython\s+-m\s+pytest\b/,
-  /\bgo\s+test\b/,
-  /\bcargo\s+test\b/,
-  /\bmake\s+test\b/,
-];
 
 const TEST_PASS_PATTERNS = [
   /Tests:.*passed/i,
@@ -78,9 +67,10 @@ function extractFilePath(toolInput) {
   return toolInput.file_path || toolInput.filePath || null;
 }
 
-function isTestCommand(command) {
-  if (!command) return false;
-  return TEST_COMMANDS.some(pattern => pattern.test(command));
+function isRegisteredTestCommand(command, testCommand) {
+  if (!command || !testCommand || testCommand === 'none') return false;
+  // Match if the bash command starts with or contains the registered test command
+  return command.includes(testCommand);
 }
 
 function didTestsPass(output) {
@@ -125,12 +115,12 @@ async function main() {
       changed = true;
     }
 
-    // Track test results from Bash commands
-    if (toolName === 'Bash') {
+    // Track test results from Bash commands (only if test_command is registered)
+    if (toolName === 'Bash' && state.test_command) {
       const command = data.toolInput?.command || data.tool_input?.command || '';
       const output = data.toolOutput || data.tool_output || '';
 
-      if (isTestCommand(command) && didTestsPass(output)) {
+      if (isRegisteredTestCommand(command, state.test_command) && didTestsPass(output)) {
         state.tests_just_passed = true;
         changed = true;
       }

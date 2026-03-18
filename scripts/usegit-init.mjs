@@ -98,6 +98,19 @@ function detectTestRunner(directory) {
   return null;
 }
 
+function inferTestCommand(runner) {
+  const mapping = {
+    'jest': 'npx jest',
+    'vitest': 'npx vitest',
+    'pytest': 'pytest',
+    'cargo-test': 'cargo test',
+    'go-test': 'go test ./...',
+    'mocha': 'npx mocha',
+    'npm-test': 'npm test',
+  };
+  return mapping[runner] || null;
+}
+
 async function main() {
   try {
     const input = await readStdin();
@@ -122,10 +135,15 @@ async function main() {
         state.current_branch = branch;
       }
 
-      // Re-detect test runner in case project changed
+      // Re-detect test runner in case project changed (but don't overwrite explicit user setting)
       const testRunner = detectTestRunner(directory);
       if (testRunner) {
         state.test_runner_detected = testRunner;
+      }
+
+      // If test_command was never explicitly set, infer from detected runner
+      if (!state.test_command_set && testRunner) {
+        state.test_command = inferTestCommand(testRunner);
       }
     }
 
