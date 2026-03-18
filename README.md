@@ -17,8 +17,8 @@ use-git prevents that. It watches your work and reminds you to commit at the rig
 ## Install
 
 ```
-/plugin marketplace add eckart/usegit-plugin
-/plugin install use-git@usegit-plugin
+/plugin marketplace add https://github.com/eckart/use-git-plugin
+/plugin install use-git@use-git-plugin
 ```
 
 ## Quick Start
