@@ -154,6 +154,15 @@ async function main() {
     const mode = state.mode || 'coach';
     const edits = state.edits_since_commit || 0;
     const branch = state.current_branch || 'unknown';
+    const testCommandSet = state.test_command_set === true;
+
+    // If test command not yet configured, try to infer and suggest
+    let testSuggestion = null;
+    if (!testCommandSet) {
+      const runner = state.test_runner_detected || detectTestRunner(directory);
+      const inferred = runner ? inferTestCommand(runner) : null;
+      testSuggestion = { runner, inferred };
+    }
 
     let message;
     if (voice === 'technical') {
@@ -161,12 +170,26 @@ async function main() {
       if (edits > 0) {
         message += `, ${edits} edits uncommitted`;
       }
+      if (!testCommandSet && testSuggestion) {
+        if (testSuggestion.inferred) {
+          message += `\n[use-git] Detected ${testSuggestion.runner}. Suggest registering \`${testSuggestion.inferred}\` as test command. Ask the user to confirm or override. Run /use-git test-command "${testSuggestion.inferred}" to set, or /use-git test-command none to disable.`;
+        } else {
+          message += `\n[use-git] No test framework detected. Ask the user if they run tests in this project — if so, what command? If not, run /use-git test-command none.`;
+        }
+      }
     } else {
       message = `[use-git] Welcome back! use-git is active (${mode} mode).`;
       if (edits > 0) {
         message += ` You have ${edits} unsaved changes from last session.`;
       }
       message += ` Working on branch "${branch}".`;
+      if (!testCommandSet && testSuggestion) {
+        if (testSuggestion.inferred) {
+          message += `\n[use-git] I noticed ${testSuggestion.runner} is set up in this project. Ask the user: "I found ${testSuggestion.runner} — should I use \`${testSuggestion.inferred}\` to detect when your tests pass? Or tell me the right command, or say 'no tests' if this isn't a code project."`;
+        } else {
+          message += `\n[use-git] I couldn't detect a test framework. Ask the user: "Do you run tests in this project? If so, what command do you use? If not, just say 'no tests' and I'll save based on your editing pace instead."`;
+        }
+      }
     }
 
     console.log(JSON.stringify({
