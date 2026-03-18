@@ -1,0 +1,27 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "use-git",
+  "description": "Automated local git best practices for Claude Code",
+  "owner": {
+    "name": "Eckart"
+  },
+  "plugins": [
+    {
+      "name": "use-git",
+      "description": "Tracks edits, nudges at natural commit points, stages intelligently, and generates meaningful commits. Three modes (zen, coach, autopilot) and two voices (friendly, technical) adapt to any skill level and preference.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Eckart"
+      },
+      "source": "./",
+      "category": "productivity",
+      "tags": [
+        "git",
+        "version-control",
+        "automation",
+        "best-practices",
+        "vibe-coding"
+      ]
+    }
+  ]
+}

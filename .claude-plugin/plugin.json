@@ -1,0 +1,17 @@
+{
+  "name": "use-git",
+  "version": "0.1.0",
+  "description": "Automated local git best practices for Claude Code. Tracks edits, nudges at natural commit points, stages intelligently, and generates meaningful commits — so you never have to think about version control.",
+  "author": {
+    "name": "Eckart"
+  },
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "plugin",
+    "git",
+    "version-control",
+    "vibe-coding"
+  ],
+  "skills": "./skills/"
+}
