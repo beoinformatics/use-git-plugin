@@ -2,7 +2,7 @@
 
 A Claude Code plugin that automates git best practices. It runs quietly in the background, tracking your edits and prompting you to commit at natural breaking points — when tests pass, after a batch of changes, or before you end a session. The commit workflow is the core feature: it analyzes your changes, stages them, and suggests meaningful commit messages without you having to think about it.
 
-**Status: Experimental.** This plugin was built quickly to solve a personal pain point (forgetting to commit) and has not been battle-tested. Use at your own risk in production projects.
+**Status: Experimental.** This plugin was built quickly to and has not been battle-tested. Use at your own risk in production projects.
 
 Feedback and contributions are welcome.
 
@@ -102,11 +102,11 @@ Projects without tests still get nudges based on edit count and time - test dete
 
 ## Safety Features
 
-- **Branch guard**: Prevents commits directly to main/master
-- **Secret detection**: Blocks files that look like credentials (.env, *.pem, API keys)
-- **Quit reminder**: Warns if you try to exit with uncommitted work
-- **Destructive command guard**: Flags dangerous commands (rm -rf, git reset --hard) when you have unsaved changes
-- **Auto-gitignore**: Suggests entries for build artifacts (node_modules, dist, __pycache__)
+- Branch guard: Prevents commits directly to main/master
+- Secret detection: Blocks files that look like credentials (.env, *.pem, API keys)
+- Quit reminder: Warns if you try to exit with uncommitted work
+- Destructive command guard: Flags dangerous commands (rm -rf, git reset --hard) when you have unsaved changes
+- Auto-gitignore: Suggests entries for build artifacts (node_modules, dist, __pycache__)
 
 ## How It Works (For the Curious)
 
@@ -133,23 +133,7 @@ Everything is stored in `.use-git/state.json`. Within Claude Code you can change
 /use-git test-command "pytest"   Change the test command
 ```
 
-## FAQ
-
-**Does use-git push to remotes?**
-No. Everything stays local. The plugin never pushes, creates PRs, or touches remotes.
-
-**Can I use this for writing or documentation?**
-Yes. Set `/use-git test-command none` and it will nudge based on edit count and time instead of test results.
-
-**Does it work with existing repos?**
-Yes. It detects your current branch, existing .gitignore, and test setup.
-
-**What if I know git well?**
-Use zen mode. You get branch protection and secret detection without any nudging.
-
-**Does it conflict with other plugins?**
-No. use-git has no dependencies and works standalone.
-
 ## License
 
 MIT - Copyright (c) 2026 Eckart Bindewald and contributors
+
