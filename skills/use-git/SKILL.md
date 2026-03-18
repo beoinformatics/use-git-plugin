@@ -247,10 +247,11 @@ Here's what I'd like to commit:
      Note: "add login form tests"
 
 What would you like to do?
-  1. Commit — go ahead
-  2. Explain — walk me through the changes first
-  3. Edit — I want to change grouping or notes
-  4. Skip — not now
+  1. Commit all — commit all groups as shown
+  2. Commit one-by-one — walk through each file individually
+  3. Explain changes — walk me through what changed first
+  4. Edit grouping — I want to change grouping or notes
+  5. Skip — not now
 ```
 
 **Technical voice:**
@@ -264,8 +265,34 @@ Pending commits:
   Group 2: test: add login form tests
     A  tests/LoginForm.test.tsx
 
-Action? (commit / explain / edit / skip)
+Action? (commit all / one-by-one / explain / edit groups / skip)
 ```
+
+**If user chooses "commit all":** Commit all groups as presented (see below).
+
+**If user chooses "one-by-one":** Iterate over each file individually. For each file:
+
+**Friendly voice:**
+```
+  📄 src/hooks/useAuth.ts (changed)
+     What changed: Added token refresh logic to the auth hook
+     Suggested note: "feat: add token refresh to auth hook"
+
+     What would you like to do?
+       1. Commit — use this note
+       2. Edit note — change the commit message
+       3. Skip — don't commit this file
+```
+
+**Technical voice:**
+```
+  M  src/hooks/useAuth.ts
+     Diff: +token refresh logic
+     Msg: feat: add token refresh to auth hook
+     (commit / edit msg / skip)
+```
+
+Files committed individually get their own commits. Skipped files remain uncommitted.
 
 **If user chooses "explain":** Walk through each group's changes — what was modified and why — then re-present the prompt.
 
@@ -273,7 +300,7 @@ Action? (commit / explain / edit / skip)
 
 **If user chooses "skip":** Done. No commits made.
 
-**On "commit":** For each group in order:
+**On "commit all":** For each group in order:
 1. `git add <files in group>`
 2. `git commit -m "<type>: <description>"`
 
