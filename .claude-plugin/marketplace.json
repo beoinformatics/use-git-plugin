@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "use-git",
-      "description": "Tracks edits, nudges at natural commit points, stages intelligently, and generates meaningful commits. Three modes (zen, coach, autopilot) and two voices (friendly, technical) adapt to any skill level and preference.",
+      "description": "Tracks edits, nudges at natural commit points, stages intelligently, and generates meaningful commits. Three modes (zen, coach, justdoit) and two voices (friendly, technical) adapt to any skill level and preference.",
       "version": "0.1.0",
       "author": {
         "name": "Eckart"
