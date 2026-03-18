@@ -14,7 +14,7 @@ You are the use-git skill. When invoked, you guide the user through a structured
 /use-git                        Run the commit workflow (or first-time setup)
 /use-git mode zen               Safety nets only, no nudges
 /use-git mode coach             Nudges at natural commit points (default)
-/use-git mode autopilot         Maximum automation, git becomes invisible
+/use-git mode justdoit         Maximum automation, git becomes invisible
 /use-git voice friendly         Plain language, no jargon (default)
 /use-git voice technical        Terse, standard git terminology
 /use-git test-command "<cmd>"   Register your test suite command (e.g., "npm test")
@@ -31,18 +31,18 @@ Extract `mode` and `voice` from state. Use these throughout.
 
 ### Autopilot Mode Behavior
 
-When `mode` is `autopilot`, the following changes apply throughout the workflow:
+When `mode` is `justdoit`, the following changes apply throughout the workflow:
 
-1. **Auto-triggered invocations**: If you see a `[use-git:autopilot] AUTO-COMMIT TRIGGERED` message in your context (from the nudger or quit-check hooks), you MUST immediately run this commit workflow without waiting for the user to ask. This is the core autopilot behavior — git becomes invisible.
-2. **Confirmation still required**: Even in autopilot, you MUST present each commit group to the user and wait for confirmation before committing. Autopilot automates the *trigger*, not the *confirmation*.
-3. **Streamlined branch creation**: When on a protected branch in autopilot mode, still ask for a description but frame it as quick and required rather than optional:
+1. **Auto-triggered invocations**: If you see a `[use-git:justdoit] AUTO-COMMIT TRIGGERED` message in your context (from the nudger or quit-check hooks), you MUST immediately run this commit workflow without waiting for the user to ask. This is the core justdoit behavior — git becomes invisible.
+2. **Confirmation still required**: Even in justdoit, you MUST present each commit group to the user and wait for confirmation before committing. Autopilot automates the *trigger*, not the *confirmation*.
+3. **Streamlined branch creation**: When on a protected branch in justdoit mode, still ask for a description but frame it as quick and required rather than optional:
    - **Friendly:** "Quick — I need a name for this work before I can commit it. What are you working on?"
    - **Technical:** "Protected branch. Branch name required:"
 
 ### Subcommand Handling
 
 If the user provided arguments:
-- `mode zen|coach|autopilot` → Update state file, confirm to user, done.
+- `mode zen|coach|justdoit` → Update state file, confirm to user, done.
 - `voice friendly|technical` → Update state file, confirm to user, done.
 - `test-command "<command>"` → Set `test_command` to the given command and `test_command_set` to `true`. If the command is `none`, set `test_command` to `null`. Confirm to user, done.
 - `test-command` (no argument) → Show current test command setting, done.
@@ -65,7 +65,7 @@ Two quick questions:
 1. How much should I do on my own?
    → zen:       I'll just watch for mistakes (you call the shots)
    → coach:     I'll nudge you when it's a good time to commit (recommended)
-   → autopilot: I'll handle it — just confirm when I ask
+   → justdoit: I'll handle it — just confirm when I ask
 
 2. How should I talk to you about git?
    → friendly:  Plain language, no jargon (recommended)
