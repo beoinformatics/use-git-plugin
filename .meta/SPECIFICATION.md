@@ -60,7 +60,7 @@ State is persisted in `<project-root>/.use-git/state.json`:
 
 ## 3. Modes and Voice
 
-Mode and voice are **independent settings**. Mode controls *what the plugin does*. Voice controls *how it talks to you*. A professional can use autopilot with technical voice. A beginner can use coach with friendly voice. Any combination is valid.
+Mode and voice are **independent settings**. Mode controls *what the plugin does*. Voice controls *how it talks to you*. A professional can use justdoit with technical voice. A beginner can use coach with friendly voice. Any combination is valid.
 
 ### 3.1 Mode: Zen
 
@@ -137,7 +137,7 @@ Voice only changes output text. It never changes:
 /use-git                    → Run the commit workflow (or first-time init)
 /use-git mode zen           → Switch automation level
 /use-git mode coach         → Switch automation level (default)
-/use-git mode autopilot     → Switch automation level
+/use-git mode justdoit     → Switch automation level
 /use-git voice friendly     → Switch output tone (default)
 /use-git voice technical    → Switch output tone
 /use-git status             → Show current settings + tracking state
@@ -156,7 +156,7 @@ Two quick questions:
 1. How much should I do on my own?
    → zen:       I'll just watch for mistakes (you call the shots)
    → coach:     I'll nudge you when it's a good time to commit [recommended]
-   → autopilot: I'll handle it — just confirm when I ask
+   → justdoit: I'll handle it — just confirm when I ask
 
 2. How should I talk to you about git?
    → friendly:  Plain language, no jargon [recommended]
@@ -168,7 +168,7 @@ Two quick questions:
 ```
 use-git init
 
-Mode:  [zen | coach* | autopilot]   * = default
+Mode:  [zen | coach* | justdoit]   * = default
 Voice: [friendly* | technical]
 
 Select mode:
