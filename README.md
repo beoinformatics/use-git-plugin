@@ -1,6 +1,6 @@
 # use-git
 
-A Claude Code plugin for developers who forget to commit. Actually it is built for anyone who has ever lost work because they were "in the zone" and forgot to save their progress. The category of git tooling is decades old and yet has never been really re-thought from the perspective of AI-assisted coding. Here is a stab at it: If you are in a Claude session, making edits, running tests, the plugin detects natural commit points and nudges you to save your work. Except that feature is still being tuned. What works well though is the commit workflow. With AI generating code at lightning speed, having a helper that groups your changes and writes meaningful commit messages is a nice feature to have.
+A Claude Code plugin for developers who forget to commit. Actually it is built for anyone who has ever lost work because they were "in the zone" and forgot to save their progress. The category of git tooling is decades old and yet has never been really re-thought from the perspective of AI-assisted coding. Here is a stab at it: If you are in a Claude session, making edits, running tests, the plugin detects natural commit points and nudges you to save your work. Except that feature is still being tuned. What works well though is the commit workflow. With AI generating code at lightning speed, having a helper that stages your changes and writes meaningful commit messages is a nice feature to have.
 
 **Please note that this is a hobby project in an early stage. One cannot with confidence say this plugin is ready for mission-critical projects because it has not been thoroughly tested and contains AI-generated code!**
 
@@ -9,7 +9,7 @@ That said: it would be all the more helpful if you try it out and leave some fee
 ## Features
 
 - Smart nudging: Detects when tests pass, after 15+ edits, or 30+ minutes of work
-- Commit workflow: Groups related files and suggests meaningful commit messages
+- Commit workflow: Stages files and suggests meaningful commit messages
 - Secret detection: Warns before you accidentally commit API keys or passwords
 - Branch protection: Blocks commits to main/master, guides you to feature branches
 - Multiple modes: Zen for experts, coach for most people, justdoit for full automation
@@ -102,10 +102,10 @@ All commands are issued within Claude Code:
 When you run `/use-git` (or it auto-triggers in justdoit mode):
 
 1. Checks your environment - git repo? right branch? secrets?
-2. Analyzes changes - groups related files into logical commits
+2. Analyzes changes - checks for secrets, suggests .gitignore entries
 3. Presents a plan - shows you what it wants to commit and why
 4. Asks what you want to do:
-   - Commit all - commit all groups as shown
+   - Commit all - commit all files as shown
    - Commit one-by-one - review each file individually
    - Explain changes - walk through what changed
    - Skip - not now
@@ -143,12 +143,12 @@ use-git runs as four lightweight hook scripts that fire on Claude Code lifecycle
 
 | Script | Event | What it does | Token cost |
 |--------|-------|-------------|-----------|
-| tracker | After every tool use | Counts edits, tracks files, detects test passes | Zero |
+| tracker | After every tool use | Counts edits, tracks files, detects test passes | Minimal |
 | nudger | Before every tool use | Injects nudge if thresholds met | ~20 tokens when nudge fires |
-| init | Session start | Restores state, re-detects environment | Zero |
-| quit-check | Session end | Warns about uncommitted work | Zero |
+| init | Session start | Restores state, re-detects environment, asks setup questions | Moderate (one-time per session) |
+| quit-check | Session end | Warns about uncommitted work | ~20 tokens when uncommitted work exists |
 
-The tracker and nudger together add less than 100ms to each tool call. The full commit workflow (when you run `/use-git`) uses an agent to analyze diffs, group files, and generate commit messages.
+The tracker and nudger together add minimal overhead to each tool call. The full commit workflow (when you run `/use-git`) uses an agent to analyze diffs, stage files, and generate commit messages.
 
 State is stored in `.use-git/state.json` in your project directory (automatically gitignored).
 
@@ -174,7 +174,7 @@ Does it work with existing git repos?
 Yes. It detects your current branch, existing .gitignore, and test framework. It meets you where you are.
 
 What if I already know git well?
-Use zen mode. You get the safety nets (branch protection, secrets detection, quit warnings) without any nudging. Or just use it as a fast way to stage and commit - the grouping and message generation work regardless of mode.
+Use zen mode. You get the safety nets (branch protection, secrets detection, quit warnings) without any nudging. Or just use it as a fast way to stage and commit - the message generation works regardless of mode.
 
 Does it conflict with other plugins?
 No. use-git has no dependencies on other plugins. It works standalone.
