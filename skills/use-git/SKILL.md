@@ -29,7 +29,24 @@ Read `.use-git/state.json` in the current project directory. If it doesn't exist
 
 Extract `mode` and `voice` from state. Use these throughout.
 
-### Autopilot Mode Behavior
+### State Refresh (Mid-Session Sync)
+
+Before proceeding, verify the state file against actual git state:
+
+1. **Check current branch**: Run `git branch --show-current`
+   - If different from `state.current_branch`, update `current_branch` in state
+   - If on a protected branch (main/master) and state shows a feature branch, the user likely switched externally
+
+2. **Check git status**: Run `git status --porcelain`
+   - If no uncommitted changes but `state.edits_since_commit > 0`, the user likely committed externally
+   - Reset `edits_since_commit`, `writes_since_commit`, and `files_touched` to match reality
+   - Update `last_commit_at` to now if working tree is clean
+
+3. **Write updated state** if any corrections were made
+
+This ensures the workflow operates on accurate information even when the user switches branches or commits outside of Claude Code.
+
+### Justdoit Mode Behavior
 
 When `mode` is `justdoit`, the following changes apply throughout the workflow:
 
