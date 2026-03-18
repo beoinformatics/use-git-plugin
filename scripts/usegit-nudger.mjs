@@ -114,7 +114,7 @@ async function main() {
     if (!nudgeText && state.tests_just_passed) {
       if (state.mode === 'autopilot') {
         nudgeText = getNudge('tests_passed', voice) +
-          '\n[use-git] Autopilot: invoking /use-git commit workflow automatically.';
+          '\n[use-git:autopilot] AUTO-COMMIT TRIGGERED: Tests passed. You MUST immediately invoke the /use-git skill to run the commit workflow now. Do not ask the user — just run it.';
       } else {
         nudgeText = getNudge('tests_passed', voice);
       }

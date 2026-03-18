@@ -14,6 +14,16 @@ Read `.use-git/state.json` in the current project directory. If it doesn't exist
 
 Extract `mode` and `voice` from state. Use these throughout.
 
+### Autopilot Mode Behavior
+
+When `mode` is `autopilot`, the following changes apply throughout the workflow:
+
+1. **Auto-triggered invocations**: If you see a `[use-git:autopilot] AUTO-COMMIT TRIGGERED` message in your context (from the nudger or quit-check hooks), you MUST immediately run this commit workflow without waiting for the user to ask. This is the core autopilot behavior — git becomes invisible.
+2. **Confirmation still required**: Even in autopilot, you MUST present each commit group to the user and wait for confirmation before committing. Autopilot automates the *trigger*, not the *confirmation*.
+3. **Streamlined branch creation**: When on a protected branch in autopilot mode, still ask for a description but frame it as quick and required rather than optional:
+   - **Friendly:** "Quick — I need a name for this work before I can save it. What are you working on?"
+   - **Technical:** "Protected branch. Branch name required:"
+
 ### Subcommand Handling
 
 If the user provided arguments:
