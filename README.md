@@ -1,6 +1,6 @@
 # use-git
 
-A Claude Code plugin that automates git best practices. It runs quietly in the background, tracking your edits and prompting you to commit at natural breaking points — when tests pass, after a batch of changes, or before you end a session. The commit workflow is the core feature: it analyzes your changes, stages them, and suggests meaningful commit messages without you having to think about it.
+A Claude Code plugin that automates git best practices. It runs quietly in the background, tracking your edits and prompting you to commit at natural breaking points — when tests pass, after a batch of changes, or before you end a session. The commit workflow is the core feature: it analyzes your changes, stages them, and suggests meaningful commit messages without you having to think about it. It was inspired by the fabulous `/tdd` skill for test-driven development from the `oh-my-claudecode` plugin: once activated it encourages and performs best practices throughout. Indeed the `/use-git` skill provided here leverages test-suites that then (if completed without errors) trigger semi-automatic source code commits. That said, version control commands are preceded by asking for user approval and nothing from this plugin makes your code leave the computer you are working on. It is designed to save time and reduce repetetive work for both beginning and experienced developers including vibe coders.
 
 **Status: Experimental.** This plugin was built quickly to and has not been battle-tested. Use at your own risk in production projects.
 
