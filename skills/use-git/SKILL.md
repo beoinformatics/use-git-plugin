@@ -250,8 +250,7 @@ What would you like to do?
   1. Commit all — commit all groups as shown
   2. Commit one-by-one — walk through each file individually
   3. Explain changes — walk me through what changed first
-  4. Edit grouping — I want to change grouping or notes
-  5. Skip — not now
+  4. Skip — not now
 ```
 
 **Technical voice:**
@@ -265,7 +264,7 @@ Pending commits:
   Group 2: test: add login form tests
     A  tests/LoginForm.test.tsx
 
-Action? (commit all / one-by-one / explain / edit groups / skip)
+Action? (commit all / one-by-one / explain / skip)
 ```
 
 **If user chooses "commit all":** Commit all groups as presented (see below).
@@ -296,9 +295,13 @@ Files committed individually get their own commits. Skipped files remain uncommi
 
 **If user chooses "explain":** Walk through each group's changes — what was modified and why — then re-present the prompt.
 
-**If user chooses "edit":** Let the user adjust grouping, move files between groups, or change commit messages, then re-present.
-
 **If user chooses "skip":** Done. No commits made.
+
+**Single file shortcut:** When there is only one file to commit, simplify the menu:
+1. Commit — commit as shown
+2. Explain changes — what changed
+3. Edit note — change the commit message
+4. Skip — not now
 
 **On "commit all":** For each group in order:
 1. `git add <files in group>`
@@ -316,6 +319,8 @@ Follow Conventional Commits. Types:
 - `style:` — formatting only
 
 First line under 72 characters. Focus on *what* and *why*, not *how*.
+
+**IMPORTANT: User-provided messages are sacred.** When the user chooses "edit note" or provides their own commit message, use it **exactly as given**. Do not prepend a conventional commit prefix, reformat, or otherwise modify it. Conventional Commits formatting only applies when *you* generate the message.
 
 ## Step 5: Summary
 
