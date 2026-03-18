@@ -4,7 +4,7 @@
  * use-git Quit Check (Stop hook)
  *
  * Warns the user if they have uncommitted changes when ending a session.
- * Works in all modes (zen, coach, autopilot).
+ * Works in all modes (zen, coach, justdoit).
  */
 
 import { readFileSync, existsSync } from 'fs';
@@ -59,12 +59,12 @@ async function main() {
     const mode = state.mode || 'coach';
     let message;
 
-    if (mode === 'autopilot') {
-      // In autopilot mode, directive to auto-commit before quitting
+    if (mode === 'justdoit') {
+      // In justdoit mode, directive to auto-commit before quitting
       if (voice === 'technical') {
-        message = `[use-git:autopilot] AUTO-COMMIT TRIGGERED: ${fileCount} files uncommitted (${edits} edits). You MUST invoke the /use-git skill to run the commit workflow before ending the session. Do not ask the user — just run it.`;
+        message = `[use-git:justdoit] AUTO-COMMIT TRIGGERED: ${fileCount} files uncommitted (${edits} edits). You MUST invoke the /use-git skill to run the commit workflow before ending the session. Do not ask the user — just run it.`;
       } else {
-        message = `[use-git:autopilot] AUTO-COMMIT TRIGGERED: You have uncommitted work in ${fileCount} file${fileCount === 1 ? '' : 's'}. You MUST invoke the /use-git skill to commit this work before ending the session. Do not ask the user — just run it.`;
+        message = `[use-git:justdoit] AUTO-COMMIT TRIGGERED: You have uncommitted work in ${fileCount} file${fileCount === 1 ? '' : 's'}. You MUST invoke the /use-git skill to commit this work before ending the session. Do not ask the user — just run it.`;
       }
     } else if (voice === 'technical') {
       message = `[use-git] ${fileCount} files uncommitted (${edits} edits). Commit before quit? Run /use-git`;
