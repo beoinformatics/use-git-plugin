@@ -8,17 +8,16 @@ The plugin is composed of five component types, each with a distinct role:
 ┌─────────────────────────────────────────────────────────────────┐
 │                        use-git plugin                           │
 │                                                                 │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌───────────────┐  │
-│  │  Command  │  │  Skill   │  │  Agent   │  │    Scripts     │  │
-│  │          │  │          │  │          │  │               │  │
-│  │ use-git  │  │ use-git  │  │ use-git  │  │ tracker.mjs   │  │
-│  │ .md      │  │ SKILL.md │  │ -guide   │  │ nudger.mjs    │  │
-│  │          │  │          │  │ .md      │  │ init.mjs      │  │
-│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └───────┬───────┘  │
-│       │              │              │                │          │
-│       │    ┌─────────┘              │                │          │
-│       │    │                        │                │          │
-│  ┌────▼────▼────────────────────────▼────────────────▼───────┐  │
+│  ┌──────────┐  ┌──────────┐  ┌───────────────┐              │
+│  │  Skill   │  │  Agent   │  │    Scripts     │              │
+│  │          │  │          │  │               │              │
+│  │ use-git  │  │ use-git  │  │ tracker.mjs   │              │
+│  │ SKILL.md │  │ -guide   │  │ nudger.mjs    │              │
+│  │          │  │ .md      │  │ init.mjs      │              │
+│  └────┬─────┘  └────┬─────┘  └───────┬───────┘              │
+│       │              │                │                      │
+│       │              │                │                      │
+│  ┌────▼──────────────▼────────────────▼───────────────────┐  │
 │  │                      hooks.json                           │  │
 │  │  Registers scripts to Claude Code lifecycle events        │  │
 │  └───────────────────────────────────────────────────────────┘  │
@@ -34,8 +33,7 @@ The plugin is composed of five component types, each with a distinct role:
 
 | Component | Type | Purpose | Uses LLM? |
 |-----------|------|---------|-----------|
-| `commands/use-git.md` | Command | Entry point for `/use-git` invocation | No (routes to skill) |
-| `skills/use-git/SKILL.md` | Skill | Defines workflow rules, mode behaviors, voice templates | Yes (loaded into context) |
+| `skills/use-git/SKILL.md` | Skill | Entry point + workflow rules, mode behaviors, voice templates | Yes (loaded into context) |
 | `agents/use-git-guide.md` | Agent | Performs git analysis, staging, committing | Yes (Sonnet) |
 | `scripts/usegit-tracker.mjs` | Hook script | Counts edits/writes, tracks touched files | No (shell only) |
 | `scripts/usegit-nudger.mjs` | Hook script | Injects nudge messages at commit points | No (shell only) |
@@ -46,24 +44,7 @@ The plugin is composed of five component types, each with a distinct role:
 
 ## 2. Component Details
 
-### 2.1 Command: `commands/use-git.md`
-
-The thinnest possible layer. When the user types `/use-git`, this file is loaded. It:
-
-1. Parses any subcommand arguments (`mode`, `voice`, `status`)
-2. For settings changes (`mode`, `voice`): updates state file directly, confirms to user
-3. For the commit workflow (no args or first-time): invokes the Skill
-
-The command itself contains no workflow logic — it's a router.
-
-```
-/use-git               → invoke skill (commit workflow or init)
-/use-git mode <x>      → update state.mode, confirm
-/use-git voice <x>     → update state.voice, confirm
-/use-git status        → read state, display summary
-```
-
-### 2.2 Skill: `skills/use-git/SKILL.md`
+### 2.1 Skill: `skills/use-git/SKILL.md`
 
 The brain. Loaded into Claude's context when the commit workflow is triggered. Contains:
 
@@ -237,15 +218,9 @@ User: /use-git
        │
        ▼
 ┌──────────────────┐
-│ Command           │
-│ use-git.md       │──→ parse args, route
-└──────┬───────────┘
-       │ (no subcommand = commit workflow)
-       ▼
-┌──────────────────┐
 │ Skill             │
 │ SKILL.md         │──→ loaded into Claude's context
-│                  │    (workflow rules, voice templates)
+│                  │    (parse args, route, workflow rules, voice templates)
 └──────┬───────────┘
        │
        ▼
@@ -277,14 +252,8 @@ User: /use-git (first time)
        │
        ▼
 ┌──────────────────┐
-│ Command           │
-│ use-git.md       │──→ no state file found → trigger init flow
-└──────┬───────────┘
-       │
-       ▼
-┌──────────────────┐
 │ Skill             │
-│ SKILL.md         │──→ init workflow loaded
+│ SKILL.md         │──→ no state file found → init workflow loaded
 └──────┬───────────┘
        │
        ▼
@@ -329,7 +298,7 @@ Clear boundaries prevent scope creep and bugs:
 
 | Component | Does NOT |
 |-----------|----------|
-| **Command** | Contain workflow logic. Never runs git commands. |
+| **Skill** | Execute git commands directly. Delegates to agent. |
 | **Skill** | Execute anything. It's a prompt document, not code. |
 | **Agent** | Push, create PRs, or interact with remotes. |
 | **Tracker** | Call the LLM. Invoke skills. Make decisions. |
@@ -344,7 +313,7 @@ Clear boundaries prevent scope creep and bugs:
 
 ### Internal (Claude Code plugin system)
 - Hook registration system (`hooks.json` format)
-- Skill/command/agent loading infrastructure
+- Skill/agent loading infrastructure
 - No dependency on oh-my-claudecode or any other plugin
 
 ### Optional
