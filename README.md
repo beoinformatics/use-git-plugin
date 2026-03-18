@@ -12,7 +12,7 @@ That said: it would be all the more helpful if you try it out and leave some fee
 - Commit workflow: Groups related files and suggests meaningful commit messages
 - Secret detection: Warns before you accidentally commit API keys or passwords
 - Branch protection: Blocks commits to main/master, guides you to feature branches
-- Multiple modes: Zen for experts, coach for most people, autopilot for full automation
+- Multiple modes: Zen for experts, coach for most people, justdoit for full automation
 - Voice selection: Friendly plain language or terse technical output
 
 ## Getting Started
@@ -68,7 +68,7 @@ Then it detects your environment and starts tracking. If the project isn't a git
 |------|-------------|----------|
 | zen | Safety nets only - blocks commits to main, warns about secrets, alerts before quit | Experienced git users who want guardrails, not guidance |
 | coach | Nudges at natural commit points (after tests pass, after 15+ edits, after 30+ minutes) | Most people (default) |
-| autopilot | Auto-triggers the commit workflow after tests pass and before session end | People who want git to be completely invisible |
+| justdoit | Auto-triggers the commit workflow after tests pass and before session end | People who want git to be completely invisible |
 
 All modes still require you to confirm before each commit. Autopilot automates the trigger, not the confirmation.
 
@@ -89,7 +89,7 @@ All commands are issued within Claude Code:
 /use-git                        Run the commit workflow
 /use-git mode zen               Switch to zen mode
 /use-git mode coach             Switch to coach mode (default)
-/use-git mode autopilot         Switch to autopilot mode
+/use-git mode justdoit         Switch to justdoit mode
 /use-git voice friendly         Switch to friendly voice (default)
 /use-git voice technical        Switch to technical voice
 /use-git test-command "pytest"  Register your test suite command
@@ -99,7 +99,7 @@ All commands are issued within Claude Code:
 
 ## The Commit Workflow
 
-When you run `/use-git` (or it auto-triggers in autopilot mode):
+When you run `/use-git` (or it auto-triggers in justdoit mode):
 
 1. Checks your environment - git repo? right branch? secrets?
 2. Analyzes changes - groups related files into logical commits
@@ -157,7 +157,7 @@ State is stored in `.use-git/state.json` in your project directory (automaticall
 Everything is stored in `.use-git/state.json`. Within Claude Code you can change settings anytime:
 
 ```
-/use-git mode autopilot          Change how much it does
+/use-git mode justdoit          Change how much it does
 /use-git voice technical         Change how it talks
 /use-git test-command "pytest"   Change the test command
 ```
