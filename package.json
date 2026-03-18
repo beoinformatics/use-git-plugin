@@ -19,7 +19,6 @@
   ],
   "files": [
     "agents",
-    "commands",
     "hooks",
     "scripts",
     "skills"
