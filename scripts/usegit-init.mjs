@@ -181,4 +181,8 @@ async function main() {
   }
 }
 
-main();
+// Run when executed directly, not when imported for testing
+const isDirectRun = process.argv[1] && import.meta.url === `file://${process.argv[1]}`;
+if (isDirectRun) main();
+
+export { inferTestCommand, detectTestRunner };
