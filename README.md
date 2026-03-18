@@ -1,10 +1,10 @@
 # use-git
 
-A Claude Code plugin for developers who forget to commit. Actually it is built for anyone who has ever lost work because they were "in the zone" and forgot to save their progress. The category of git tooling is decades old and yet has never been really re-thought from the perspective of AI-assisted coding. Here is a stab at it: If you are in a Claude session, making edits, running tests, the plugin detects natural commit points and nudges you to save your work. Except that feature is still being tuned. What works well though is the commit workflow. With AI generating code at lightning speed, having a helper that stages your changes and writes meaningful commit messages is a nice feature to have.
+A Claude Code plugin that automates git best practices. It runs quietly in the background, tracking your edits and prompting you to commit at natural breaking points — when tests pass, after a batch of changes, or before you end a session. The commit workflow is the core feature: it analyzes your changes, stages them, and suggests meaningful commit messages without you having to think about it.
 
-**Please note that this is a hobby project in an early stage. One cannot with confidence say this plugin is ready for mission-critical projects because it has not been thoroughly tested and contains AI-generated code!**
+**Status: Experimental.** This plugin was built quickly to solve a personal pain point (forgetting to commit) and has not been battle-tested. Use at your own risk in production projects.
 
-That said: it would be all the more helpful if you try it out and leave some feedback or maybe even contribute!
+Feedback and contributions are welcome.
 
 ## Features
 
@@ -15,52 +15,24 @@ That said: it would be all the more helpful if you try it out and leave some fee
 - Multiple modes: Zen for experts, coach for most people, justdoit for full automation
 - Voice selection: Friendly plain language or terse technical output
 
-## Getting Started
+## Installation
 
-### Prerequisites
+Requires Claude Code.
 
-- Claude Code installed and configured
-- A git repository (existing or new)
+Add the plugin:
 
-### Install
-
-Start Claude Code:
-
-```
-claude
-```
-
-Then within Claude Code, add the plugin using either SSH (recommended) or HTTPS:
-
-SSH:
 ```
 /plugin marketplace add git@github.com:beoinformatics/use-git-plugin.git
-```
-
-HTTPS (requires git credential helper configured):
-```
-/plugin marketplace add https://github.com/beoinformatics/use-git-plugin.git
-```
-
-Then install:
-```
 /plugin install use-git@use-git-plugin
 ```
 
-### Run
-
-Within Claude Code:
+Then run:
 
 ```
 /use-git
 ```
 
-That's it. On first run, use-git asks two questions:
-
-1. Mode - how much automation you want
-2. Voice - how it should talk to you
-
-Then it detects your environment and starts tracking. If the project isn't a git repo yet, it sets one up.
+First run asks for your preferred mode (zen/coach/justdoit) and voice (friendly/technical). Works with existing repos or creates one if needed.
 
 ## Modes
 
@@ -128,14 +100,13 @@ Within Claude Code:
 
 Projects without tests still get nudges based on edit count and time - test detection just adds one more signal.
 
-## What It Protects You From
+## Safety Features
 
-- Committing to main/master - always guides you to a feature branch
-- Accidentally tracking secrets - scans filenames and file contents for API keys, private keys, tokens, passwords
-- Forgetting to commit - nudges after tests pass, after many edits, before you quit
-- Losing work - warns you about uncommitted changes before session end
-- Committing build artifacts - suggests .gitignore entries for node_modules, dist, __pycache__, etc.
-- Destructive commands - warns before `rm -rf`, `git reset --hard`, etc. when you have uncommitted work
+- **Branch guard**: Prevents commits directly to main/master
+- **Secret detection**: Blocks files that look like credentials (.env, *.pem, API keys)
+- **Quit reminder**: Warns if you try to exit with uncommitted work
+- **Destructive command guard**: Flags dangerous commands (rm -rf, git reset --hard) when you have unsaved changes
+- **Auto-gitignore**: Suggests entries for build artifacts (node_modules, dist, __pycache__)
 
 ## How It Works (For the Curious)
 
@@ -164,20 +135,20 @@ Everything is stored in `.use-git/state.json`. Within Claude Code you can change
 
 ## FAQ
 
-Does this push my code anywhere?
-No. All operations are local. use-git will never push, create PRs, or interact with any remote.
+**Does use-git push to remotes?**
+No. Everything stays local. The plugin never pushes, creates PRs, or touches remotes.
 
-Can I use this for non-code projects?
-Yes. Within Claude Code set `/use-git test-command none` and it will nudge based on edit count and time instead of test results. Works fine for writing, documentation, or any project where you want change tracking.
+**Can I use this for writing or documentation?**
+Yes. Set `/use-git test-command none` and it will nudge based on edit count and time instead of test results.
 
-Does it work with existing git repos?
-Yes. It detects your current branch, existing .gitignore, and test framework. It meets you where you are.
+**Does it work with existing repos?**
+Yes. It detects your current branch, existing .gitignore, and test setup.
 
-What if I already know git well?
-Use zen mode. You get the safety nets (branch protection, secrets detection, quit warnings) without any nudging. Or just use it as a fast way to stage and commit - the message generation works regardless of mode.
+**What if I know git well?**
+Use zen mode. You get branch protection and secret detection without any nudging.
 
-Does it conflict with other plugins?
-No. use-git has no dependencies on other plugins. It works standalone.
+**Does it conflict with other plugins?**
+No. use-git has no dependencies and works standalone.
 
 ## License
 
