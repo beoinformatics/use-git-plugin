@@ -13,8 +13,6 @@ use-git/
 ├── skills/
 │   └── use-git/
 │       └── SKILL.md              # Skill definition, workflow rules, mode behaviors
-├── commands/
-│   └── use-git.md                # Command entry point for /use-git invocation
 ├── agents/
 │   └── use-git-guide.md          # Agent that performs git analysis and operations
 ├── scripts/
