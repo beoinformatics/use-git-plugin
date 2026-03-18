@@ -180,14 +180,14 @@ async function main() {
     } else {
       message = `[use-git] Welcome back! use-git is active (${mode} mode).`;
       if (edits > 0) {
-        message += ` You have ${edits} unsaved changes from last session.`;
+        message += ` You have ${edits} uncommitted changes from last session.`;
       }
       message += ` Working on branch "${branch}".`;
       if (!testCommandSet && testSuggestion) {
         if (testSuggestion.inferred) {
           message += `\n[use-git] I noticed ${testSuggestion.runner} is set up in this project. Ask the user: "I found ${testSuggestion.runner} — should I use \`${testSuggestion.inferred}\` to detect when your tests pass? Or tell me the right command, or say 'no tests' if this isn't a code project."`;
         } else {
-          message += `\n[use-git] I couldn't detect a test framework. Ask the user: "Do you run tests in this project? If so, what command do you use? If not, just say 'no tests' and I'll save based on your editing pace instead."`;
+          message += `\n[use-git] I couldn't detect a test framework. Ask the user: "Do you run tests in this project? If so, what command do you use? If not, just say 'no tests' and I'll nudge you to commit based on your editing pace instead."`;
         }
       }
     }

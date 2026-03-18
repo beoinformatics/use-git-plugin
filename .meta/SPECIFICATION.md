@@ -102,7 +102,7 @@ Maximum automation. Git becomes invisible.
 
 ### 3.4 Voice: Friendly (Default)
 
-Plain language. Avoids git jargon or translates it inline. Uses metaphors like "save", "checkpoint", "snapshot" instead of "commit". Reassuring tone.
+Plain language. Avoids unnecessary git jargon or translates it inline. Uses "commit", "record the change", or "capture a checkpoint" — never "save" (which means writing to disk). Reassuring tone.
 
 ### 3.5 Voice: Technical
 
@@ -114,12 +114,12 @@ Terse, standard git terminology. No explanations of what git concepts mean. Outp
 |-----------|----------|-----------|
 | Branch creation | "I moved your work to its own branch called 'add-auth' so it's separate from the main codebase." | `Switched to new branch feat/add-auth` |
 | Secrets detected | "I skipped .env.local because it contains private keys. I added it to .gitignore so it won't accidentally get shared." | `.env.local not staged — contains secrets. Added to .gitignore.` |
-| .gitignore update | "I told git to ignore some folders (like node_modules) that don't need to be saved — they can be recreated anytime." | `Added node_modules/, dist/ to .gitignore` |
-| Commit summary | "Saved your login form work — 3 files captured with the note 'add login form'." | `feat: add login form (3 files)` |
-| Test-pass nudge | "Your tests are all passing — want me to save a checkpoint of your work?" | `Tests green. 4 files uncommitted. /use-git?` |
-| Edit count nudge | "You've made a bunch of changes — want me to save a checkpoint?" | `15 edits uncommitted.` |
-| Quit warning | "You have unsaved work in 4 files. Want me to save it before you go?" | `4 files uncommitted. Commit before quit?` |
-| Not a git repo | "This project isn't set up for version tracking yet. Want me to set that up? It lets you save checkpoints of your work." | `Not a git repo. Run git init?` |
+| .gitignore update | "I told git to ignore some folders (like node_modules) that don't need to be tracked — they can be recreated anytime." | `Added node_modules/, dist/ to .gitignore` |
+| Commit summary | "Committed your login form work — 3 files recorded with the note 'add login form'." | `feat: add login form (3 files)` |
+| Test-pass nudge | "Your tests are all passing — ready to commit?" | `Tests green. 4 files uncommitted. /use-git?` |
+| Edit count nudge | "You've made a bunch of changes — want to commit them?" | `15 edits uncommitted.` |
+| Quit warning | "You have uncommitted work in 4 files. Want to commit before you go?" | `4 files uncommitted. Commit before quit?` |
+| Not a git repo | "This project isn't set up for change tracking yet. Want me to set that up?" | `Not a git repo. Run git init?` |
 | On protected branch | "You're working directly on the main codebase. Let's create a safe space for your changes first. What are you working on?" | `On main. Create feature branch? Describe the work:` |
 
 ### 3.7 Voice Does NOT Affect Behavior
@@ -151,13 +151,13 @@ On first invocation, `/use-git` runs an interactive init flow:
 
 **Friendly voice init:**
 ```
-Welcome to use-git! I'll help you save your work automatically.
+Welcome to use-git! I'll help you commit your work automatically.
 
 Two quick questions:
 
 1. How much should I do on my own?
    → zen:       I'll just watch for mistakes (you call the shots)
-   → coach:     I'll nudge you when it's a good time to save [recommended]
+   → coach:     I'll nudge you when it's a good time to commit [recommended]
    → autopilot: I'll handle it — just confirm when I ask
 
 2. How should I talk to you about git?
@@ -177,13 +177,13 @@ Select mode:
 Select voice:
 ```
 
-Settings are saved to state and persist across sessions. Can be changed anytime via `/use-git mode <x>` or `/use-git voice <x>`.
+Settings are stored in state and persist across sessions. Can be changed anytime via `/use-git mode <x>` or `/use-git voice <x>`.
 
 ### 4.3 Keyword Detection
 
 The keyword detector hook recognizes:
 - `use-git` (exact)
-- Phrases like "commit my work", "save my progress" (contextual, friendly voice keywords)
+- Phrases like "commit my work", "record my progress" (contextual, friendly voice keywords)
 
 ### 4.4 Session Persistence
 
@@ -264,7 +264,7 @@ When `/use-git` is invoked (manually or via auto-trigger), the following steps e
      - test: add login form unit tests (2 files)
      Added to .gitignore: dist/, .env.local
 
-     Your work is saved locally. Use /use-git push when ready to share."
+     Your work is committed locally. Use /use-git push when ready to share."
 ```
 
 ## 6. Nudge Specifications
@@ -283,7 +283,7 @@ When `/use-git` is invoked (manually or via auto-trigger), the following steps e
 
 **Injected context (voice-dependent):**
 ```
-friendly:  [use-git] Your tests are all passing — want me to save a checkpoint?
+friendly:  [use-git] Your tests are all passing — ready to commit?
 technical: [use-git] Tests green. 4 files uncommitted. /use-git?
 ```
 
@@ -293,7 +293,7 @@ technical: [use-git] Tests green. 4 files uncommitted. /use-git?
 
 **Injected context:**
 ```
-friendly:  [use-git] You've made a bunch of changes — want me to save a checkpoint?
+friendly:  [use-git] You've made a bunch of changes — want to commit them?
 technical: [use-git] 15 edits uncommitted.
 ```
 
@@ -305,7 +305,7 @@ technical: [use-git] 15 edits uncommitted.
 
 **Injected context:**
 ```
-friendly:  [use-git] It's been a while since your last save. Want to capture your progress?
+friendly:  [use-git] It's been a while since your last commit. Want to record your progress?
 technical: [use-git] 30+ min since last commit. /use-git?
 ```
 
@@ -317,7 +317,7 @@ technical: [use-git] 30+ min since last commit. /use-git?
 
 **Injected context:**
 ```
-friendly:  [use-git] You have unsaved work in N files. Want me to save it before you go?
+friendly:  [use-git] You have uncommitted work in N files. Want to commit before you go?
 technical: [use-git] N files uncommitted. Commit before quit?
 ```
 
@@ -327,7 +327,7 @@ technical: [use-git] N files uncommitted. Commit before quit?
 
 **Injected context:**
 ```
-friendly:  [use-git] Careful — you have unsaved changes. This might erase them. Save first?
+friendly:  [use-git] Careful — you have uncommitted changes. This might erase them. Commit first?
 technical: [use-git] Uncommitted changes. This command may discard them. Commit first?
 ```
 

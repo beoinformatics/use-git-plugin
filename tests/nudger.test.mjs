@@ -45,7 +45,7 @@ describe('isDestructiveCommand', () => {
 describe('getNudge', () => {
   it('returns friendly nudge for tests_passed', () => {
     const result = getNudge('tests_passed', 'friendly');
-    assert.ok(result.includes('tests are all passing'));
+    assert.ok(result.includes('tests are all passing — ready to commit'));
   });
 
   it('returns technical nudge for tests_passed', () => {
@@ -60,7 +60,7 @@ describe('getNudge', () => {
 
   it('falls back to friendly if voice not found', () => {
     const result = getNudge('tests_passed', 'unknown_voice');
-    assert.ok(result.includes('tests are all passing'));
+    assert.ok(result.includes('tests are all passing — ready to commit'));
   });
 
   it('returns empty string for unknown key', () => {

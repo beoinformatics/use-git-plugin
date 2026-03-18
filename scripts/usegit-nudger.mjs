@@ -25,19 +25,19 @@ const DESTRUCTIVE_PATTERNS = [
 
 const NUDGES = {
   tests_passed: {
-    friendly: '[use-git] Your tests are all passing — want me to save a checkpoint? Run /use-git',
+    friendly: '[use-git] Your tests are all passing — ready to commit? Run /use-git',
     technical: '[use-git] Tests green. Files uncommitted. /use-git?',
   },
   edit_threshold: {
-    friendly: '[use-git] You\'ve made a bunch of changes — want me to save a checkpoint? Run /use-git',
+    friendly: '[use-git] You\'ve made a bunch of changes — want to commit them? Run /use-git',
     technical: '[use-git] {count} edits uncommitted. /use-git?',
   },
   time_threshold: {
-    friendly: '[use-git] It\'s been a while since your last save. Want to capture your progress? Run /use-git',
+    friendly: '[use-git] It\'s been a while since your last commit. Want to record your progress? Run /use-git',
     technical: '[use-git] 30+ min since last commit. /use-git?',
   },
   destructive: {
-    friendly: '[use-git] Careful — you have unsaved changes. This might erase them. Save first with /use-git?',
+    friendly: '[use-git] Careful — you have uncommitted changes. This might erase them. Commit first with /use-git?',
     technical: '[use-git] Uncommitted changes. This command may discard them. Commit first?',
   },
 };

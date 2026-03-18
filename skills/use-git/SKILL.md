@@ -21,7 +21,7 @@ When `mode` is `autopilot`, the following changes apply throughout the workflow:
 1. **Auto-triggered invocations**: If you see a `[use-git:autopilot] AUTO-COMMIT TRIGGERED` message in your context (from the nudger or quit-check hooks), you MUST immediately run this commit workflow without waiting for the user to ask. This is the core autopilot behavior — git becomes invisible.
 2. **Confirmation still required**: Even in autopilot, you MUST present each commit group to the user and wait for confirmation before committing. Autopilot automates the *trigger*, not the *confirmation*.
 3. **Streamlined branch creation**: When on a protected branch in autopilot mode, still ask for a description but frame it as quick and required rather than optional:
-   - **Friendly:** "Quick — I need a name for this work before I can save it. What are you working on?"
+   - **Friendly:** "Quick — I need a name for this work before I can commit it. What are you working on?"
    - **Technical:** "Protected branch. Branch name required:"
 
 ### Subcommand Handling
@@ -43,13 +43,13 @@ If no state file exists, this is the first activation.
 If voice is not yet known, use the friendly voice for init:
 
 ```
-Welcome to use-git! I'll help you save your work automatically.
+Welcome to use-git! I'll help you commit your work automatically.
 
 Two quick questions:
 
 1. How much should I do on my own?
    → zen:       I'll just watch for mistakes (you call the shots)
-   → coach:     I'll nudge you when it's a good time to save (recommended)
+   → coach:     I'll nudge you when it's a good time to commit (recommended)
    → autopilot: I'll handle it — just confirm when I ask
 
 2. How should I talk to you about git?
@@ -85,11 +85,11 @@ Then run environment detection. **IMPORTANT: Narrate each step in the chosen voi
 
 | Action | Say this |
 |--------|----------|
-| `git init` | "First, let me set up version tracking for this project so we can save checkpoints of your work." |
-| Create .gitignore | "I'm creating a list of files that don't need to be saved — things like temporary files and downloaded packages that can be recreated anytime." |
+| `git init` | "First, let me set up version tracking for this project so we can record checkpoints of your work." |
+| Create .gitignore | "I'm creating a list of files that don't need to be tracked — things like temporary files and downloaded packages that can be recreated anytime." |
 | Detect branch | "Let me check where we're working..." |
 | Detect test runner | "Checking if you have any automated tests set up..." |
-| Not a git repo | "This project isn't set up for saving checkpoints yet. Want me to set that up?" |
+| Not a git repo | "This project isn't set up for change tracking yet. Want me to set that up?" |
 | No test runner found | "I didn't find any automated tests. That's fine — I just won't be able to nudge you after tests pass. You can always run `/use-git` yourself." |
 
 ### Init Narration: Technical Voice
@@ -119,10 +119,10 @@ Then run environment detection. **IMPORTANT: Narrate each step in the chosen voi
 5. **Ask about test command.** If a test runner was detected, confirm the inferred command with the user. If no runner was detected, ask directly. The user can also say "none" to explicitly opt out.
 
    **Friendly voice (runner detected):**
-   > I found [runner] set up. I'll treat `[inferred command]` as your test suite — when it passes, I'll know it's a good time to save. If that's not right, tell me the command you use. Or say "no tests" if this isn't a code project.
+   > I found [runner] set up. I'll treat `[inferred command]` as your test suite — when it passes, I'll know it's a good time to commit. If that's not right, tell me the command you use. Or say "no tests" if this isn't a code project.
 
    **Friendly voice (no runner detected):**
-   > Do you run tests in this project? If so, what command? (e.g., `npm test`, `pytest`, `make test`). If not, just say "no tests" — I'll save based on your editing pace instead.
+   > Do you run tests in this project? If so, what command? (e.g., `npm test`, `pytest`, `make test`). If not, just say "no tests" — I'll nudge you to commit based on your editing pace instead.
 
    **Technical voice (runner detected):**
    > Detected: [runner]. Register `[inferred command]` as test command? (enter to confirm / override / 'none')
@@ -174,7 +174,7 @@ After user describes the work:
 
 If `git status` shows nothing to commit:
 
-**Friendly:** "Everything is already saved! Nothing new to capture."
+**Friendly:** "Everything is already committed! Nothing new to record."
 **Technical:** "Working tree clean. Nothing to commit."
 
 Done.
@@ -231,31 +231,49 @@ Group all changes (untracked candidates + modified files) by logical unit:
 
 ## Step 4: Stage and Commit
 
-For each logical group, present it to the user:
+Present ALL groups to the user at once, then ask what they'd like to do with a clear multiple-choice prompt:
 
 **Friendly voice:**
 ```
-I'd like to save this as a group:
+Here's what I'd like to commit:
 
-  📁 Login form feature
+  📁 Group 1: Login form feature
      - src/components/LoginForm.tsx (new file)
      - src/hooks/useAuth.ts (changed)
+     Note: "add login form with auth hook"
 
-  With the note: "add login form with auth hook"
+  📁 Group 2: Login form tests
+     - tests/LoginForm.test.tsx (new file)
+     Note: "add login form tests"
 
-  OK? (yes / edit the note / skip)
+What would you like to do?
+  1. Commit — go ahead
+  2. Explain — walk me through the changes first
+  3. Edit — I want to change grouping or notes
+  4. Skip — not now
 ```
 
 **Technical voice:**
 ```
-Group 1: feat: add login form with auth hook
-  A  src/components/LoginForm.tsx
-  M  src/hooks/useAuth.ts
+Pending commits:
 
-Commit? (y / edit msg / skip)
+  Group 1: feat: add login form with auth hook
+    A  src/components/LoginForm.tsx
+    M  src/hooks/useAuth.ts
+
+  Group 2: test: add login form tests
+    A  tests/LoginForm.test.tsx
+
+Action? (commit / explain / edit / skip)
 ```
 
-On confirmation:
+**If user chooses "explain":** Walk through each group's changes — what was modified and why — then re-present the prompt.
+
+**If user chooses "edit":** Let the user adjust grouping, move files between groups, or change commit messages, then re-present.
+
+**If user chooses "skip":** Done. No commits made.
+
+**On "commit":** For each group in order:
 1. `git add <files in group>`
 2. `git commit -m "<type>: <description>"`
 
@@ -278,13 +296,13 @@ After all groups are committed:
 
 **Friendly voice:**
 ```
-All done! Here's what I saved:
+All done! Here's what I committed:
 
   ✓ "add login form with auth hook" (3 files)
   ✓ "add login form tests" (2 files)
   ✓ Updated .gitignore (added dist/, .env.local)
 
-Your work is saved on branch feat/add-auth.
+Your work is committed on branch feat/add-auth.
 Everything stays on your computer — nothing was shared online.
 ```
 

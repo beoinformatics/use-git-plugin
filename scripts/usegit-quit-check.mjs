@@ -64,12 +64,12 @@ async function main() {
       if (voice === 'technical') {
         message = `[use-git:autopilot] AUTO-COMMIT TRIGGERED: ${fileCount} files uncommitted (${edits} edits). You MUST invoke the /use-git skill to run the commit workflow before ending the session. Do not ask the user — just run it.`;
       } else {
-        message = `[use-git:autopilot] AUTO-COMMIT TRIGGERED: You have unsaved work in ${fileCount} file${fileCount === 1 ? '' : 's'}. You MUST invoke the /use-git skill to save this work before ending the session. Do not ask the user — just run it.`;
+        message = `[use-git:autopilot] AUTO-COMMIT TRIGGERED: You have uncommitted work in ${fileCount} file${fileCount === 1 ? '' : 's'}. You MUST invoke the /use-git skill to commit this work before ending the session. Do not ask the user — just run it.`;
       }
     } else if (voice === 'technical') {
       message = `[use-git] ${fileCount} files uncommitted (${edits} edits). Commit before quit? Run /use-git`;
     } else {
-      message = `[use-git] You have unsaved work in ${fileCount} file${fileCount === 1 ? '' : 's'}. Want me to save it before you go? Run /use-git`;
+      message = `[use-git] You have uncommitted work in ${fileCount} file${fileCount === 1 ? '' : 's'}. Want to commit before you go? Run /use-git`;
     }
 
     // Stop hooks use stopReason at top level, not hookSpecificOutput
