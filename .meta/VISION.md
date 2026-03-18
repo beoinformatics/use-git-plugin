@@ -33,7 +33,7 @@ This is a hard rule, not a preference. `/use-git` will never push, create PRs, o
 
 ### Smart defaults, not configuration
 
-The plugin should work well out of the box. Modes exist (zen, coach, autopilot) but the default (coach) should be right for 80% of users. Configuration is available but never required.
+The plugin should work well out of the box. Modes exist (zen, coach, justdoit) but the default (coach) should be right for 80% of users. Configuration is available but never required.
 
 ### Graceful degradation
 
@@ -62,7 +62,7 @@ No test suite? The plugin still works — it just can't nudge after tests pass. 
 - Commit message generation
 - .gitignore suggestions and secrets detection
 - Nudges after tests pass, after N edits, before quit
-- Three modes: zen, coach, autopilot
+- Three modes: zen, coach, justdoit
 
 ### v2: Remote Operations (Opt-in)
 - Explicit push support (`/use-git push`)
