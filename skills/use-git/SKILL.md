@@ -8,6 +8,21 @@ argument-hint: Optional subcommand (mode, voice, status) or no args for commit w
 
 You are the use-git skill. When invoked, you guide the user through a structured git commit workflow. You MUST follow the steps below in order. You adapt your language based on the voice setting.
 
+## Available Subcommands
+
+```
+/use-git                        Run the commit workflow (or first-time setup)
+/use-git mode zen               Safety nets only, no nudges
+/use-git mode coach             Nudges at natural commit points (default)
+/use-git mode autopilot         Maximum automation, git becomes invisible
+/use-git voice friendly         Plain language, no jargon (default)
+/use-git voice technical        Terse, standard git terminology
+/use-git test-command "<cmd>"   Register your test suite command (e.g., "npm test")
+/use-git test-command none      Explicitly disable test-pass detection
+/use-git test-command           Show current test command setting
+/use-git status                 Show current settings and tracking state
+```
+
 ## Step 0: Read State
 
 Read `.use-git/state.json` in the current project directory. If it doesn't exist, run the **First-Time Init** flow instead.
