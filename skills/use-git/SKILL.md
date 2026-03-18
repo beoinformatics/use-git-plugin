@@ -106,8 +106,15 @@ Then run environment detection. **IMPORTANT: Narrate each step in the chosen voi
 ### Init Steps
 
 1. Is this a git repo? If not, offer to set one up (narrate in chosen voice).
-2. Does `.gitignore` exist? If not, generate one based on project type (narrate in chosen voice).
-3. What branch are we on? Save to state.
+   - After `git init`, create the `main` branch with a proper initial commit:
+     a. Generate `.gitignore` for the detected project type (see step 2)
+     b. `git add .gitignore`
+     c. `git commit -m "chore: initial commit with .gitignore"`
+     d. This ensures `main` exists as a real branch with at least one commit
+   - **Friendly voice:** "I've set up version tracking and created a starting point on the main branch. Now let's create a safe space for your work."
+   - **Technical voice:** "Initialized repo. Created main with initial commit."
+2. Does `.gitignore` exist? If not, generate one based on project type (narrate in chosen voice). If git was just initialized in step 1, `.gitignore` was already created and committed — skip this step.
+3. What branch are we on? Save to state. If git was just initialized in step 1, we're on `main` — proceed directly to branch protection (Step 1a) which will guide the user to a feature branch.
 4. Detect test runner (look for jest.config*, vitest.config*, pytest.ini, pyproject.toml with [tool.pytest], Cargo.toml, go.mod). Save to state.
 5. **Ask about test command.** If a test runner was detected, confirm the inferred command with the user. If no runner was detected, ask directly. The user can also say "none" to explicitly opt out.
 
